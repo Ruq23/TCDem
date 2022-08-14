@@ -9,8 +9,10 @@ cryptography==37.0.4
 cssselect2==0.6.0
 defusedxml==0.7.1
 distlib==0.3.4
+dj-database-url==1.0.0
 Django==4.0.5
 django-embed-template==0.2.0
+django-heroku==0.3.1
 django-social-share==2.3.0
 filelock==3.7.1
 future==0.18.2
@@ -49,4 +51,5 @@ uritools==4.0.0
 urllib3==1.26.11
 virtualenv==20.14.1
 webencodings==0.5.1
+whitenoise==6.2.0
 xhtml2pdf==0.2.8
