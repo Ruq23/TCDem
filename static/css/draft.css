@@ -556,7 +556,7 @@ footer {
     header .nav-logo{
         width: 48px;
         height: 48px;
-        margin-left: 70%;
+        margin-left: -240px
     }
 
     .nav-btns{
