@@ -330,6 +330,12 @@ footer li{
         border-radius: .5rem;
         background-color: #ffc07f;
     }
+    .b2, .butt {
+        height: 55px;
+        width: 80px;
+        border-radius: .5rem;
+        background-color: #ffc07f;
+    }
     .butt {
     	font-size: 13px;
     }

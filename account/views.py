@@ -1,4 +1,6 @@
 
+from cgitb import html
+from fileinput import filename
 from django import forms
 from django.shortcuts import redirect, render
 from django.contrib import messages
@@ -8,10 +10,20 @@ from django.views.generic.detail import DetailView
 from .forms import PostForm
 from django.views import generic
 from django.urls import reverse_lazy
+from django.views.generic import UpdateView, DetailView
+from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth.views import PasswordChangeView
+
+from .forms import PostForm, PasswordChangingForm
 
 from django.http import HttpResponse
 from django.template import loader
 from django.contrib.auth.decorators import login_required
+from django.views.generic import View
+from django.template.loader import get_template
+
+
+
 
 # Create your views here.
 def login(request):
@@ -87,7 +99,29 @@ def new(request):
                 return redirect("/account/template")
         else:
             form = PostForm()
-        return render(request, "tcform.html", {"form": form})
+        return render(request, "posts/new.html", {"form": form})
+    else:
+        return redirect('first')
+
+@login_required(login_url="login")
+def newtc(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            form = PostForm(request.POST)
+            # name = request.POST['name']
+            # country = request.POST['country']
+            # duration = request.POST['duration']
+            # industry = request.POST['industry']
+            if form.is_valid():
+                print('I work')
+                instance = form.save(commit=False)
+                instance.user = request.user
+                instance.save()
+                return redirect("/account/template")
+        else:
+            form = PostForm()
+            
+        return render(request, "posts/newtc.html", {"form": form})
     else:
         return redirect('first')
 
@@ -98,12 +132,25 @@ def template(request):
         'users': User.objects.all(),
         'posts': Post.objects.all(),
     }
-
-    # users = User.objects.all()
-    
-
-    # return render(request, "posts/template.html")
     return render(request, "posts/template.html", context)
+
+@login_required(login_url="login")
+def tctemplate(request):
+    
+    context = {
+        'users': User.objects.all(),
+        'posts': Post.objects.all(),
+    }
+    return render(request, "posts/tc_template.html", context)
+
+@login_required(login_url="login")
+def pptemplate(request):
+    
+    context = {
+        'users': User.objects.all(),
+        'posts': Post.objects.all(),
+    }
+    return render(request, "posts/pp_template.html", context)
 
 @login_required(login_url="login")
 def templated(request, slug_text):
@@ -114,41 +161,78 @@ def templated(request, slug_text):
         return HttpResponse("Page not found error")
 
     users = User.objects.all()
-    
-    # context = {
-    #     'users': User.objects.all(),
-    #     # 'posts': Post.objects.get(id=  pk_test)
-    # }
-
-    # users = User.objects.all()
-    
-
-    # return render(request, "posts/template.html")
     return render(request, "posts/templated.html", {'q':q, 'users':users})
 
+def templatedshare(request, slug_text):
+    q = Post.objects.filter(slug = slug_text)
+    if q.exists():
+        q = q.first()
+    else:
+        return HttpResponse("Page not found error")
 
+    users = User.objects.all()
+    return render(request, "posts/templatedshare.html", {'q':q, 'users':users})
+
+@login_required(login_url="login")
 def delete_template(request, slug_text):
     post = Post.objects.filter(slug = slug_text)
     post.delete()
     return render(request, "posts/template.html")
-    # return redirect('template')
-
-def temp2(request, slug_text):
-    # post = Post.objects.filter(slug = slug_text)
-    q = Post.objects.filter(slug = slug_text)
-    # if q.exists():
-    #     q = q.first()
-    # else:
-    #     return HttpResponse("Page not found error")
-
-    users = User.objects.all()
-    return render(request, "temp2.html", {'q':q})
 
 def profile(request):
     return render(request, "profile.html")
 
+def faq(request):
+    return render(request, "faq.html")
 
+def contact(request):
+    return render(request, "contact.html")
 
+def draft(request):
+    
+    context = {
+        'users': User.objects.all(),
+        'posts': Post.objects.all(),
+    }
+    return render(request, "draft.html", context)
+
+def ppdraft(request):
+    
+    context = {
+        'users': User.objects.all(),
+        'posts': Post.objects.all(),
+    }
+    return render(request, "pp_draft.html", context)
+
+def tcdraft(request):
+    
+    context = {
+        'users': User.objects.all(),
+        'posts': Post.objects.all(),
+    }
+    return render(request, "tc_draft.html", context)
+
+class PostUpdateView(UpdateView):
+    model = Post
+    template_name = 'blog/pp-form-business-info.html'
+
+    fields = ['Your_Website_Name', 'Your_Website_Url', 'country', 'Policy_Effective_Date', 'Address', 'industry', 'Privacy', 'Advertisment', 'gdrp_wording', 'Phone', 'Email']
+    success_url = reverse_lazy('draft')
+
+class UserUpdateView(UpdateView):
+    form_class = UserChangeForm
+    model = User
+    template_name = 'draft.html'
+
+    fields = ['first_name', 'last_name', 'username', 'email']
+    success_url = reverse_lazy('userlogged')
+
+class PasswordsChangeView(PasswordChangeView):
+    form_class = PasswordChangingForm
+    success_url: reverse_lazy('password_change_done')
+
+def password_change_done(request):
+    return render(request, 'password_reset/password_change_done.html', {})
 
 
         
