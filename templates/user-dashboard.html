@@ -20,7 +20,7 @@
     <nav>
         <div class="mobile-menu">
             <div class="logo-container">
-                <a href="./index.html"><img src="{% static '/assets/Logo.svg' %}" alt="logo" class=""></a>
+                <a href="/"><img src="{% static '/assets/Logo.svg' %}" alt="logo" class=""></a>
             </div>
             <a href="" class="hamburger" onclick="toggleMenu()">
                 <span class="bars"></span>
@@ -31,12 +31,12 @@
         
         <div class="add-btns">
             <div class="support-btn">
-                <a href=""><img src="{% static '/assets/support-icon.svg' %}" alt="support icon">
+                <a href="contact"><img src="{% static '/assets/support-icon.svg' %}" alt="support icon">
                 <span class="">Support</span>
                 </a>
             </div>
             <div class="user-act-btn">
-                <a href="">
+                <a href="profile">
                 <img src="{% static '/assets/profile-circle.svg' %}" alt="profile icon">
                 <span class="">{{ user.first_name }}</span>
                 </a>
