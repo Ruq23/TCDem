@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'tcdem.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'tcdemo2',
+        'NAME': 'tcdemo3',
         'USER': 'postgres',
         'PASSWORD': 'admin',
         'HOST': 'localhost'
